@@ -1,27 +1,39 @@
+/* app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --primary: 220 90% 56%;
+    --primary-foreground: 0 0% 100%;
   }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Low bandwidth optimizations */
+.image-optimized {
+  max-width: 100%;
+  height: auto;
+  loading: lazy;
+}
+
+/* Smooth transitions */
+.transition-fast {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Print styles for worksheets */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
   }
 }
