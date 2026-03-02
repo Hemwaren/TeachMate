@@ -1,39 +1,371 @@
-/* app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   1. THEME VARIABLES & BASE STYLES
+   "The Dual-Reality Curriculum" - Dynamic, growing, and adaptive.
+   ========================================================================== */
 @layer base {
   :root {
-    --primary: 220 90% 56%;
+    /* ----------------------------------------------------
+       THEME A (LIGHT): "The Luminous Aether"
+       A bright, airy space focused on clarity and growth.
+       ---------------------------------------------------- */
+    --background: 210 40% 98%;    /* #F8FAFC - Clean, slightly cool canvas */
+    --surface: 0 0% 100%;         /* #FFFFFF - Tangible cards */
+    --foreground: 222 47% 11%;    /* #0F172A - High legibility slate ink */
+    
+    /* Primary (Navy Blue): Key actions, navigation, authoritative states */
+    --primary: 210 100% 20%;      /* #003366 - Matches Login Page */
+    --primary-variant: 212 100% 48%; /* #0066FF */
     --primary-foreground: 0 0% 100%;
+
+    /* Secondary (Teal/Sky): Progress, success, growth indicators */
+    --secondary: 199 89% 48%;     /* #0EA5E9 */
+    --secondary-variant: 200 98% 39%; /* #0284C7 */
+    --secondary-foreground: 0 0% 100%;
+
+    /* Functional Colors */
+    --error: 348 83% 47%;         /* #E11D48 */
+    --error-foreground: 0 0% 100%;
+    
+    /* UI Elements */
+    --border: 214 32% 91%;        /* #E2E8F0 */
+    --input: 214 32% 91%;
+    --ring: 212 100% 48%;         /* Focus ring matches secondary blue */
+    
+    /* Animation Speeds */
+    --speed-fast: 200ms;
+    --speed-normal: 300ms;
+  }
+
+  .dark {
+    /* ----------------------------------------------------
+       THEME B (DARK): "The Midnight Horizon"
+       Deep, cinematic, glowing, and focused.
+       ---------------------------------------------------- */
+    --background: 259 38% 8%;     /* #120d1d - Deep space violet/black */
+    --surface: 240 9% 13%;        /* #1E1E24 - Stealth Matte panels */
+    --foreground: 0 0% 98%;       /* #FAFAFA - Luminous text */
+
+    /* Primary (Electric Purple): Glowing interactions */
+    --primary: 265 100% 47%;      /* #6200EE - Matches Login Page */
+    --primary-variant: 266 94% 86%; /* #BB86FC */
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary (Starlight Blue): High-tech accents */
+    --secondary: 199 89% 48%;     /* #0EA5E9 */
+    --secondary-variant: 199 89% 48%;
+    --secondary-foreground: 0 0% 0%;
+
+    /* Functional Colors (Glowing Error) */
+    --error: 341 76% 77%;         /* #CF6679 */
+    --error-foreground: 0 0% 0%;
+
+    /* UI Elements */
+    --border: 240 6% 20%;         /* #303036 - Subtle dark borders */
+    --input: 240 6% 20%;
+    --ring: 265 100% 47%;         /* Purple Focus Ring */
+  }
+
+  /* Global Resets */
+  html {
+    scroll-behavior: smooth;
+    /* Smooth theme transitions */
+    transition: background-color 500ms ease, color 500ms ease;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 
+    CRITICAL: Webkit Autofill Fix
+    Prevents Chrome from injecting solid yellow/white backgrounds 
+    into glassmorphic or dark mode inputs.
+  */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+    caret-color: hsl(var(--foreground));
   }
 }
 
+/* ==========================================================================
+   2. COMPONENT CLASSES
+   Tailored for the Dual-Reality Aesthetic.
+   ========================================================================== */
+@layer components {
+  
+  /* --- The Custom Scrollbar (Used in the Sign-up Form) --- */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-black/10 dark:bg-white/10 rounded-full transition-colors;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-black/20 dark:bg-white/20;
+  }
+
+  /* --- The Living Card --- 
+     Light: Soft, tangible, lifted (Aerogel Glass vibe).
+     Dark: Solid Stealth Matte with glowing edges.
+  */
+  .tm-card {
+    position: relative;
+    background-color: hsl(var(--surface));
+    color: hsl(var(--foreground));
+    border-radius: 1.5rem; /* 24px - Organic and modern */
+    border: 1px solid hsl(var(--border) / 0.8);
+    
+    /* Light Mode: Soft diffused shadow */
+    box-shadow: 
+      0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+      0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      
+    transition: 
+      transform var(--speed-normal) cubic-bezier(0.34, 1.56, 0.64, 1), 
+      box-shadow var(--speed-normal) ease, 
+      border-color var(--speed-normal) ease;
+  }
+
+  .tm-card:hover {
+    transform: translateY(-4px) scale(1.01);
+    /* Light Mode: Lift effect */
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: hsl(var(--primary) / 0.3);
+  }
+
+  .dark .tm-card {
+    /* Dark Mode: Stealth Matte */
+    background: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .dark .tm-card:hover {
+    transform: translateY(-2px) scale(1.01);
+    border-color: hsl(var(--primary) / 0.5);
+    /* Dark Mode: Inner Purple Glow */
+    box-shadow: 0 0 30px hsl(var(--primary) / 0.15), inset 0 0 20px hsl(var(--primary) / 0.05);
+  }
+
+  /* --- Buttons --- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem; /* 12px */
+    transition: all var(--speed-fast) ease-in-out;
+  }
+
+  /* Primary Button: The "Supernova / Beacon" Action */
+  .btn-primary {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 12px hsl(var(--primary) / 0.25);
+  }
+
+  .btn-primary:hover {
+    background-image: linear-gradient(120deg, hsl(var(--primary)), hsl(var(--primary-variant)));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px hsl(var(--primary) / 0.4);
+  }
+
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px hsl(var(--primary) / 0.25);
+  }
+
+  /* Secondary Button: The "Starlight" Outline */
+  .btn-secondary {
+    background: transparent;
+    border: 2px solid hsl(var(--border));
+    color: hsl(var(--foreground));
+    padding: 0.65rem 1.4rem; 
+  }
+
+  .btn-secondary:hover {
+    background: hsl(var(--secondary) / 0.1);
+    border-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-variant));
+  }
+  
+  .dark .btn-secondary:hover {
+    color: hsl(var(--secondary));
+    box-shadow: 0 0 20px hsl(var(--secondary) / 0.2);
+  }
+
+  /* --- Navigation Header --- */
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    width: 100%;
+    background-color: hsl(var(--surface) / 0.85);
+    backdrop-filter: saturate(180%) blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .dark .app-header {
+    background-color: hsl(var(--background) / 0.8);
+    border-bottom: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  /* --- Forms & Inputs --- */
+  .input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: hsl(var(--foreground) / 0.8);
+  }
+
+  .input-field {
+    width: 100%;
+    background-color: hsl(var(--surface));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: hsl(var(--foreground));
+    transition: all 0.2s ease;
+  }
+
+  .input-field::placeholder {
+    color: hsl(var(--foreground) / 0.4);
+  }
+
+  .input-field:focus {
+    outline: none;
+    border-color: hsl(var(--ring));
+    /* Soft glow ring */
+    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.15);
+  }
+  
+  .dark .input-field {
+    background-color: hsl(var(--surface) / 0.8);
+    border-color: transparent; /* Stealth look */
+  }
+  
+  .dark .input-field:focus {
+    border-color: hsl(var(--ring));
+  }
+
+  /* Error State: Pulsing Red Glow */
+  .input-field.error, 
+  .input-field[aria-invalid="true"] {
+    border-color: hsl(var(--error));
+    box-shadow: 0 0 0 1px hsl(var(--error));
+    animation: pulse-error 2s infinite;
+  }
+
+  /* --- Progress Bar: "Energy & Momentum" --- */
+  .tm-progress {
+    position: relative;
+    height: 8px;
+    width: 100%;
+    background-color: hsl(var(--foreground) / 0.1);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .tm-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, hsl(var(--secondary)), hsl(var(--primary)));
+    border-radius: 999px;
+    position: relative;
+    transition: width 0.5s ease-out;
+  }
+
+  /* The Shimmering Wave Animation */
+  .tm-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-image: linear-gradient(
+      45deg, 
+      rgba(255,255,255,0) 25%, 
+      rgba(255,255,255,0.4) 50%, 
+      rgba(255,255,255,0) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite linear;
+  }
+}
+
+/* ==========================================================================
+   3. UTILITIES & SPECIFIC ANIMATIONS
+   ========================================================================== */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-balance { text-wrap: balance; }
+  
+  /* --- Knowledge Tree / Bud Animation --- */
+  .tree-bud {
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .tree-bud.bloomed {
+    transform: scale(1.2) rotate(5deg);
+    filter: drop-shadow(0 0 10px hsl(var(--secondary) / 0.4));
+  }
+
+  /* --- Print Optimization --- */
+  @media print {
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    body { background: white; color: black; }
+    .tm-card { box-shadow: none; border: 1px solid #ccc; background: white !important; }
   }
 }
 
-/* Low bandwidth optimizations */
-.image-optimized {
-  max-width: 100%;
-  height: auto;
-  loading: lazy;
+/* ==========================================================================
+   4. KEYFRAMES
+   ========================================================================== */
+
+/* Shimmer effect for progress bars and loading states */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
-/* Smooth transitions */
-.transition-fast {
-  transition: all 0.2s ease-in-out;
+/* Button sweep effect on hover */
+@keyframes sweep {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
-/* Print styles for worksheets */
-@media print {
-  .no-print {
-    display: none !important;
-  }
-  .print-only {
-    display: block !important;
-  }
+/* Error pulsing for inputs (Dark mode requirement) */
+@keyframes pulse-error {
+  0% { box-shadow: 0 0 0 0 hsl(var(--error) / 0.4); }
+  70% { box-shadow: 0 0 0 6px hsl(var(--error) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--error) / 0); }
+}
+
+/* Aurora background effect */
+@keyframes aurora {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
