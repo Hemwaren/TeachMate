@@ -87,8 +87,18 @@ function buildWeeklyPlan(args: {
   const quickChecks = (result?.quickCheckQuestions ?? []).slice(0, 5);
   const hasParent = Boolean(result?.parentNote);
 
-  const warmUp: PlanItem = { title: "5-min warm-up (retrieval questions)", durationMin: 5, tag: "Warm-up" };
-  const dailyRetrieval: PlanItem = { title: "10-min retrieval practice on weak topic", durationMin: 10, tag: "Core" };
+  const item = (
+    title: string,
+    durationMin: number | undefined,
+    tag: PlanItem["tag"]
+  ): PlanItem => ({
+    title,
+    durationMin,
+    tag,
+  });
+
+  const warmUp: PlanItem = item("5-min warm-up (retrieval questions)", 5, "Warm-up");
+  const dailyRetrieval: PlanItem = item("10-min retrieval practice on weak topic", 10, "Core");
 
   const topicLabel =
     focusTopics.length > 0 ? `Focus: ${focusTopics.join(", ")}` : "Focus: weak areas";
@@ -103,41 +113,41 @@ function buildWeeklyPlan(args: {
     days: {
       Mon: day([
         warmUp,
-        { title: `${topicLabel} — mini diagnostic (2–3 questions)`, durationMin: 10, tag: "Quick Check" },
+        item(`${topicLabel} — mini diagnostic (2–3 questions)`, 10, "Quick Check"),
         dailyRetrieval,
-        ...(quickChecks[0] ? [{ title: `Quick check: ${quickChecks[0]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        ...(quickChecks[0] ? [item(`Quick check: ${quickChecks[0]}`, 5, "Quick Check")] : []),
       ]),
       Tue: day([
         warmUp,
         ...(coreInterventions[0]
-          ? [{ title: coreInterventions[0], durationMin: 20, tag: "Core" }]
-          : [{ title: "Small-group support on weakest sub-skill", durationMin: 20, tag: "Core" }]),
+          ? [item(coreInterventions[0], 20, "Core")]
+          : [item("Small-group support on weakest sub-skill", 20, "Core")]),
         dailyRetrieval,
-        ...(quickChecks[1] ? [{ title: `Quick check: ${quickChecks[1]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        ...(quickChecks[1] ? [item(`Quick check: ${quickChecks[1]}`, 5, "Quick Check")] : []),
       ]),
       Wed: day([
         warmUp,
         ...(coreInterventions[1]
-          ? [{ title: coreInterventions[1], durationMin: 20, tag: "Core" }]
-          : [{ title: "Worked examples + guided practice", durationMin: 20, tag: "Core" }]),
-        { title: "Home practice: 6 short questions (same topic family)", durationMin: 15, tag: "Home" },
-        ...(quickChecks[2] ? [{ title: `Quick check: ${quickChecks[2]}`, durationMin: 5, tag: "Quick Check" }] : []),
+          ? [item(coreInterventions[1], 20, "Core")]
+          : [item("Worked examples + guided practice", 20, "Core")]),
+        item("Home practice: 6 short questions (same topic family)", 15, "Home"),
+        ...(quickChecks[2] ? [item(`Quick check: ${quickChecks[2]}`, 5, "Quick Check")] : []),
       ]),
       Thu: day([
         warmUp,
         ...(coreInterventions[2]
-          ? [{ title: coreInterventions[2], durationMin: 20, tag: "Core" }]
-          : [{ title: "Peer explanation: student teaches back the method", durationMin: 15, tag: "Core" }]),
+          ? [item(coreInterventions[2], 20, "Core")]
+          : [item("Peer explanation: student teaches back the method", 15, "Core")]),
         dailyRetrieval,
         ...(hasParent
-          ? [{ title: "Send parent note + 1 action they can do at home", durationMin: 10, tag: "Parent" }]
-          : [{ title: "Share progress note to student (encouragement + next step)", durationMin: 5, tag: "Parent" }]),
+          ? [item("Send parent note + 1 action they can do at home", 10, "Parent")]
+          : [item("Share progress note to student (encouragement + next step)", 5, "Parent")]),
       ]),
       Fri: day([
         warmUp,
-        { title: "Exit ticket (3 questions) + review mistakes", durationMin: 15, tag: "Quick Check" },
-        { title: "Celebrate improvement + set next week target", durationMin: 5, tag: "Core" },
-        ...(quickChecks[3] ? [{ title: `Quick check: ${quickChecks[3]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        item("Exit ticket (3 questions) + review mistakes", 15, "Quick Check"),
+        item("Celebrate improvement + set next week target", 5, "Core"),
+        ...(quickChecks[3] ? [item(`Quick check: ${quickChecks[3]}`, 5, "Quick Check")] : []),
       ]),
     },
   };
