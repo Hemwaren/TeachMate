@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import { useTheme } from "@/components/ThemeProvider";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 // Dynamic import for the PDF library
@@ -199,13 +199,37 @@ export default function LessonGeneratorPage() {
         {/* --- 1. INPUT PANEL (Normal Mode) --- */}
         {!result && !loading && (
           <section className="animate-in fade-in slide-in-from-top-4 duration-700">
-            <h1 className="text-4xl font-black text-white mb-8 drop-shadow-md tracking-tight">Lesson <span className="opacity-70">Architect</span></h1>
+            {/* header + back link */}
+            <div className="flex items-center justify-between flex-wrap mb-8">
+              <h1 className="text-4xl font-black text-white drop-shadow-md tracking-tight">
+                Lesson <span className="opacity-70">Architect</span>
+              </h1>
+              <Link
+                href="/dashboard"
+                className="animate-in fade-in slide-in-from-right-6 duration-700 rounded-xl bg-white text-[#003366] dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 border border-white/40 dark:border-white/10 backdrop-blur"
+              >
+                ← Back to Dashboard
+              </Link>
+            </div>
             <div className="tm-card p-8 bg-white/90 backdrop-blur-xl dark:bg-[#1E1E24] shadow-2xl border-white/40">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <div className="space-y-2">
                   <label className="text-xs font-black uppercase tracking-widest text-[#003366]/60 dark:text-white/40 ml-1">Subject</label>
                   <select value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full rounded-xl px-4 py-4 bg-gray-50 dark:bg-[#2b2b36] border-none text-gray-900 dark:text-white font-bold appearance-none">
-                    <option>Mathematics</option><option>Science</option><option>English</option><option>History</option><option>Geography</option>
+                      <option>Bahasa Melayu</option>
+                      <option>English</option>
+                      <option>Mathematics</option>
+                      <option>Science</option>
+                      <option>History</option>
+                      <option>Geography</option>
+                      <option>Physics</option>
+                      <option>Chemistry</option>
+                      <option>Biology</option>
+                      <option>Art Education</option>
+                      <option>Music</option>
+                      <option>Islamic Education</option>
+                      <option>Moral Education</option>
+                      <option>Other</option>
                   </select>
                 </div>
                 <div className="space-y-2 lg:col-span-2">

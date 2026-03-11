@@ -70,7 +70,24 @@ export default function Dashboard() {
   const greeting = getGreeting();
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const init = async () => {
+      // if we were redirected directly to /dashboard after an OAuth flow
+      // the URL may still contain the access_token.  Try to parse it and
+      // persist a session before we call getUser().
+      if (
+        window.location.href.includes("access_token") ||
+        window.location.href.includes("error")
+      ) {
+        try {
+          const { data } = await (supabase.auth as any).getSessionFromUrl();
+          if (data?.session) {
+            await supabase.auth.setSession(data.session);
+          }
+        } catch (e) {
+          console.warn("dashboard oauth redirect parse failed", e);
+        }
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         router.push("/login");
@@ -88,7 +105,7 @@ export default function Dashboard() {
       setTimeout(() => setLoading(false), 600);
     };
 
-    fetchUser();
+    init();
   }, [router, supabase]);
 
   // --- God Tier Loading State ---

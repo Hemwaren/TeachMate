@@ -2,6 +2,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import logo from "./logo.png";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,6 +18,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "TeachMate",
   description: "AI-powered lesson plans and insights for teachers",
+  icons: {
+    icon: logo.src,
+  },
 };
 
 export default function RootLayout({

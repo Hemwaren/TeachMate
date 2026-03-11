@@ -1,6 +1,5 @@
 // src/app/interventions/page.tsx
 "use client";
-
 import Header from "@/components/Header";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
@@ -59,11 +58,11 @@ function riskScoreFromAvg(avgPct: number) {
   return clamp(Math.round(100 - avgPct), 0, 100);
 }
 
-/* -------------------- WOW FEATURE: Weekly Plan Calendar -------------------- */
+type PlanTag = "Home" | "Warm-up" | "Core" | "Quick Check" | "Parent"
 type PlanItem = {
   title: string;
   durationMin?: number;
-  tag?: "Warm-up" | "Core" | "Quick Check" | "Home" | "Parent";
+  tag?: PlanTag
 };
 
 type WeeklyPlan = {
@@ -79,7 +78,8 @@ function buildWeeklyPlan(args: {
   risk: InterventionOutput["riskLevel"];
   weakTopics: WeakTopic[];
   result: InterventionOutput | null;
-}): WeeklyPlan {
+}): 
+WeeklyPlan {
   const { studentName, risk, weakTopics, result } = args;
 
   const focusTopics = weakTopics.slice(0, 3).map((t) => t.topic);
@@ -103,41 +103,41 @@ function buildWeeklyPlan(args: {
     days: {
       Mon: day([
         warmUp,
-        { title: `${topicLabel} — mini diagnostic (2–3 questions)`, durationMin: 10, tag: "Quick Check" },
+        { title: `${topicLabel} — mini diagnostic (2–3 questions)`, durationMin: 10, tag: "Quick Check" as PlanTag },
         dailyRetrieval,
-        ...(quickChecks[0] ? [{ title: `Quick check: ${quickChecks[0]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        ...(quickChecks[0] ? [{ title: `Quick check: ${quickChecks[0]}`, durationMin: 5, tag: "Quick Check" as PlanTag }] : []),
       ]),
       Tue: day([
         warmUp,
         ...(coreInterventions[0]
-          ? [{ title: coreInterventions[0], durationMin: 20, tag: "Core" }]
-          : [{ title: "Small-group support on weakest sub-skill", durationMin: 20, tag: "Core" }]),
+          ? [{ title: coreInterventions[0], durationMin: 20, tag: "Core" as PlanTag }]
+          : [{ title: "Small-group support on weakest sub-skill", durationMin: 20, tag: "Core" as PlanTag }]),
         dailyRetrieval,
-        ...(quickChecks[1] ? [{ title: `Quick check: ${quickChecks[1]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        ...(quickChecks[1] ? [{ title: `Quick check: ${quickChecks[1]}`, durationMin: 5, tag: "Quick Check" as PlanTag }] : []),
       ]),
       Wed: day([
         warmUp,
         ...(coreInterventions[1]
-          ? [{ title: coreInterventions[1], durationMin: 20, tag: "Core" }]
-          : [{ title: "Worked examples + guided practice", durationMin: 20, tag: "Core" }]),
-        { title: "Home practice: 6 short questions (same topic family)", durationMin: 15, tag: "Home" },
-        ...(quickChecks[2] ? [{ title: `Quick check: ${quickChecks[2]}`, durationMin: 5, tag: "Quick Check" }] : []),
+          ? [{ title: coreInterventions[1], durationMin: 20, tag: "Core" as PlanTag }]
+          : [{ title: "Worked examples + guided practice", durationMin: 20, tag: "Core" as PlanTag }]),
+        { title: "Home practice: 6 short questions (same topic family)", durationMin: 15, tag: "Home" as PlanTag },
+        ...(quickChecks[2] ? [{ title: `Quick check: ${quickChecks[2]}`, durationMin: 5, tag: "Quick Check" as PlanTag }] : []),
       ]),
       Thu: day([
         warmUp,
         ...(coreInterventions[2]
-          ? [{ title: coreInterventions[2], durationMin: 20, tag: "Core" }]
-          : [{ title: "Peer explanation: student teaches back the method", durationMin: 15, tag: "Core" }]),
+          ? [{ title: coreInterventions[2], durationMin: 20, tag: "Core" as PlanTag }]
+          : [{ title: "Peer explanation: student teaches back the method", durationMin: 15, tag: "Core" as PlanTag }]),
         dailyRetrieval,
         ...(hasParent
-          ? [{ title: "Send parent note + 1 action they can do at home", durationMin: 10, tag: "Parent" }]
-          : [{ title: "Share progress note to student (encouragement + next step)", durationMin: 5, tag: "Parent" }]),
+          ? [{ title: "Send parent note + 1 action they can do at home", durationMin: 10, tag: "Parent" as PlanTag }]
+          : [{ title: "Share progress note to student (encouragement + next step)", durationMin: 5, tag: "Parent" as PlanTag }]),
       ]),
       Fri: day([
         warmUp,
-        { title: "Exit ticket (3 questions) + review mistakes", durationMin: 15, tag: "Quick Check" },
-        { title: "Celebrate improvement + set next week target", durationMin: 5, tag: "Core" },
-        ...(quickChecks[3] ? [{ title: `Quick check: ${quickChecks[3]}`, durationMin: 5, tag: "Quick Check" }] : []),
+        { title: "Exit ticket (3 questions) + review mistakes", durationMin: 15, tag: "Quick Check" as PlanTag },
+        { title: "Celebrate improvement + set next week target", durationMin: 5, tag: "Core" as PlanTag },
+        ...(quickChecks[3] ? [{ title: `Quick check: ${quickChecks[3]}`, durationMin: 5, tag: "Quick Check" as PlanTag }] : []),
       ]),
     },
   };
@@ -176,6 +176,21 @@ export default function InterventionsPage() {
     let mounted = true;
 
     async function load() {
+      // parse OAuth callback URL if we landed here directly with tokens
+      if (
+        window.location.href.includes("access_token") ||
+        window.location.href.includes("error")
+      ) {
+        try {
+          const { data } = await (supabase.auth as any).getSessionFromUrl();
+          if (data?.session) {
+            await supabase.auth.setSession(data.session);
+          }
+        } catch (e) {
+          console.warn("interventions oauth parse failed", e);
+        }
+      }
+
       const { data } = await supabase.auth.getUser();
       if (!data.user) {
         toast.error("Please login first.");

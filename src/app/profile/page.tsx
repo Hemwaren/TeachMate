@@ -192,14 +192,21 @@ export default function ProfilePage() {
             </div>
             
             <div>
-              <Link href="/dashboard" className="text-xs font-black uppercase tracking-widest text-blue-100 dark:text-gray-400 hover:underline mb-1 block">← Dashboard</Link>
               <h1 className="text-4xl font-black text-white drop-shadow-md tracking-tight">Pedagogical Hub</h1>
               <p className="text-blue-50 dark:text-gray-400 font-medium">Manage your identity and synthesized blueprints.</p>
             </div>
           </div>
 
-          {/* Tab Switcher */}
-          <div className="bg-white/10 dark:bg-white/5 backdrop-blur-md p-1.5 rounded-2xl border border-white/20 flex gap-2">
+          {/* right-side controls */}
+          <div className="flex items-center gap-6">
+            <Link
+              href="/dashboard"
+              className="animate-in fade-in slide-in-from-right-6 duration-700 rounded-xl bg-white text-[#003366] dark:bg-white/10 dark:text-white px-5 py-2.5 text-sm font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 border border-white/40 dark:border-white/10 backdrop-blur"
+            >
+              ← Back to Dashboard
+            </Link>
+            {/* Tab Switcher */}
+            <div className="bg-white/10 dark:bg-white/5 backdrop-blur-md p-1.5 rounded-2xl border border-white/20 flex gap-2">
              <button 
                onClick={() => setActiveTab("profile")} 
                className={`px-8 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${activeTab === 'profile' ? 'bg-white text-[#003366] shadow-xl scale-105' : 'text-white hover:bg-white/10'}`}
@@ -214,6 +221,7 @@ export default function ProfilePage() {
              </button>
           </div>
         </div>
+      </div>
 
         {/* --- TAB CONTENT: PROFILE FORM --- */}
         <div className="max-w-4xl mx-auto">
