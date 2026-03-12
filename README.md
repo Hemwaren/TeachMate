@@ -37,7 +37,9 @@ If needed to run locally:
 Use the following demo account to log in:
 
 Prototype Link : https://teach-mate-eight.vercel.app/
+
 Email: aisbandung03@gmail.com
+
 Password: TeachMate03
 
 Step-by-Step Guide
