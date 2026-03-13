@@ -4,6 +4,8 @@ TeachMate is an AI-powered web prototype built to support teachers in managing c
 
 #Report Link : https://tinyurl.com/BorneoHackWknd-ReportVideo
 
+#Demo Video Link : https://tinyurl.com/BorneoHackWknd-ReportVideo
+
 #Prototype Link : https://teach-mate-eight.vercel.app/
 
 ## 1. General Description
