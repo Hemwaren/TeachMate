@@ -2,7 +2,8 @@
 
 TeachMate is an AI-powered web prototype built to support teachers in managing classroom tasks more efficiently. It was developed in response to the hackathon case study by addressing a key educational challenge: teachers often face heavy workloads, limited time, and difficulty giving personalized support to every student. TeachMate helps solve this by combining lesson planning, quiz generation, student performance tracking, class analytics, and AI-based intervention support in one platform.
 
-#Report Link :
+#Report Link : https://tinyurl.com/BorneoHackWknd-ReportVideo
+
 #Prototype Link : https://teach-mate-eight.vercel.app/
 
 ## 1. General Description
